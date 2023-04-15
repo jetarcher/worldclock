@@ -33,6 +33,7 @@ drawClock <- function(hour, minute) {
   grid.circle(0, 0, default="native", r=unit(1, "mm"),
               gp=gpar(fill="white"))
 }
+
 day_night <- function(dn_time)
 {
   if (hour(dn_time)< 6) 
@@ -41,17 +42,27 @@ day_night <- function(dn_time)
     {return("Night")}
   else 
     {return("Day")}
-  
 }
+
 fill_color <- function(fc_dn)
 {
+  #to find other colors, the function is....colors()
+  # lower gray numbers are darker - gray10 is practically black
+  # Looks like we could add some gradient on here, 
+  # so early in the morning is dark,
+  # make it lighter around 6AM, full white at noon onlt
   if(fc_dn=="Night")
-    {return("grey")}
+    {return("gray50")}
   else if(fc_dn=="Day")
     {return("white")}
   else 
     {return("white")}
 }
+#get timezones that have a slash but don't start with Et (Etc, a bunch of GMT relative ones that I don't way)
+#  Works by allowing anything that starts with something that's NOT an e and eventually has a slash
+#  OR by allowing anything that DOES start with an E but does NOT have a lower-case t after it, followed by anything and a slash
+# I think it's uglier than it should be, ut it works.
+main_tz <- OlsonNames()[grep('^[^E].+/|^[E][^t].+/',OlsonNames())]
 current_time <- Sys.time() # can adjust it by appending: -hours(3)+minutes(10)
 current_hour <- hour(current_time) #format(current_time,'%H')
 current_minute <- minute(current_time) #format(current_time,'%M')
@@ -82,7 +93,7 @@ time_3 <-c(hour(lon_time),minute(lon_time))
 time_4 <- c(hour(jp_time), minute(jp_time))
 #
 # okay, we have it finding the time, and calculating for other time zones
-#It's in a data frame, which makes it easy to access them,albeit not quite intuitive
+# It's in a data frame, which makes it easy to access them,albeit not quite intuitive
 # What I want is for it to genearate all the times for all the zones,
 # and then we can show whicher we like
 # It seems like if we could include something to say "here's the zones I want"
@@ -104,32 +115,33 @@ day(clock_df$tz_time[4])
 #clock_df <- tz_df
 #clock_df
 grid.newpage()
-vp <- viewport(width=1.0, height=0.25)
+vp <- viewport(width=1.0, height=0.25) # four times as long as high
 pushViewport(vp)
-grid.rect(gp=gpar(col="black"))
+grid.rect(gp=gpar(col="black")) #black around all 
+
 pushViewport(viewport(x=0.0, width=0.25, height=0.99,
-                      just="left", name="A"))
+                      just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
 grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
 #grid.circle(x=0.125, y=0.5, default="native", 
 #            r=unit(0.5, "native"))
 drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
-
+grid.text(clock_df$tz[1])
 upViewport(2)
 pushViewport(viewport(x=0.25, width=0.25, height=0.99,
-                      just="left", name="B"))
+                      just="left", name=clock_df$tz[2]))
 grid.rect(gp=gpar(col="green",fill=fill_color(clock_df$tz_dn[2])))
 drawClock(hour = clock_df$tzhour[2], minute = clock_df$tzmin[2])
-
+grid.text(clock_df$tz[2])
 upViewport(2)
 pushViewport(viewport(x=0.5, width=0.25, height=0.99,
-                      just="left", name="C"))
+                      just="left", name=clock_df$tz[3]))
 grid.rect(gp=gpar(col="yellow",fill=fill_color(clock_df$tz_dn[3])))
 drawClock(hour = clock_df$tzhour[3], minute = clock_df$tzmin[3])
-
+grid.text(clock_df$tz[3])
 upViewport(2)
 pushViewport(viewport(x=0.75, width=0.25, height=0.99,
-                      just="left", name="D"))
+                      just="left", name=clock_df$tz[4]))
 grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
 drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
-
+grid.text(clock_df$tz[4])
 #grid.rect(gp=gpar(col="green"))
