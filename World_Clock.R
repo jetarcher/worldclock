@@ -115,11 +115,11 @@ day(clock_df$tz_time[4])
 #clock_df <- tz_df
 #clock_df
 grid.newpage()
-vp <- viewport(width=1.0, height=0.25) # four times as long as high
+vp <- viewport(width=1.0, height=0.5) # four times as long as high
 pushViewport(vp)
 grid.rect(gp=gpar(col="black")) #black around all 
 
-pushViewport(viewport(x=0.0, width=0.25, height=0.99,
+pushViewport(viewport(x=0.0, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
 grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
 #grid.circle(x=0.125, y=0.5, default="native", 
@@ -127,19 +127,19 @@ grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
 drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
 grid.text(clock_df$tz[1])
 upViewport(2)
-pushViewport(viewport(x=0.25, width=0.25, height=0.99,
+pushViewport(viewport(x=0.25, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[2]))
 grid.rect(gp=gpar(col="green",fill=fill_color(clock_df$tz_dn[2])))
 drawClock(hour = clock_df$tzhour[2], minute = clock_df$tzmin[2])
 grid.text(clock_df$tz[2])
 upViewport(2)
-pushViewport(viewport(x=0.5, width=0.25, height=0.99,
+pushViewport(viewport(x=0.5, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[3]))
 grid.rect(gp=gpar(col="yellow",fill=fill_color(clock_df$tz_dn[3])))
 drawClock(hour = clock_df$tzhour[3], minute = clock_df$tzmin[3])
 grid.text(clock_df$tz[3])
 upViewport(2)
-pushViewport(viewport(x=0.75, width=0.25, height=0.99,
+pushViewport(viewport(x=0.75, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[4]))
 grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
 drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
