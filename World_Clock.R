@@ -35,6 +35,7 @@ drawClock <- function(hour, minute) {
                 default="native", gp=gpar(lex=2))    
   grid.circle(0, 0, default="native", r=unit(1, "mm"),
               gp=gpar(fill="white"))
+  upViewport() #pop up to the top of the context, so it ends where it starts
 }
 
 #
@@ -155,8 +156,14 @@ grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
 #grid.circle(x=0.125, y=0.5, default="native", 
 #            r=unit(0.5, "native"))
 drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
-upViewport(2)
-grid.text(clock_df$tz[1], just="top")
+grid.text(clock_df$tz[1])
+
+upViewport()
+#upViewport(2)
+pushViewport(viewport(x=0.0, width=0.25, height=0.25,y=0.825,
+                      just="left", name="header1"))
+grid.text(clock_df$tzday[1])
+upViewport()
 # upViewport(3)
 # pushViewport(viewport(x=0.0, width=0.25, height=0.25,
 #                       just="left", name="header1")
@@ -174,7 +181,12 @@ pushViewport(viewport(x=0.25, width=0.25, height=0.5,
 grid.rect(gp=gpar(col="green",fill=fill_color(clock_df$tz_dn[2])))
 drawClock(hour = clock_df$tzhour[2], minute = clock_df$tzmin[2])
 grid.text(clock_df$tz[2])
-upViewport(2)
+upViewport()
+pushViewport(viewport(x=0.25, width=0.25, height=0.25,y=0.825,
+                      just="left", name="header2"))
+grid.text(clock_df$tzday[2])
+upViewport()
+
 #
 # Third clock face starts here
 #
@@ -183,7 +195,11 @@ pushViewport(viewport(x=0.5, width=0.25, height=0.5,
 grid.rect(gp=gpar(col="yellow",fill=fill_color(clock_df$tz_dn[3])))
 drawClock(hour = clock_df$tzhour[3], minute = clock_df$tzmin[3])
 grid.text(clock_df$tz[3])
-upViewport(2)
+upViewport()
+pushViewport(viewport(x=0.5, width=0.25, height=0.25,y=0.825,
+                      just="left", name="header3"))
+grid.text(clock_df$tzday[3])
+upViewport()
 #
 # Fourth clock face starts here
 #
@@ -192,7 +208,11 @@ pushViewport(viewport(x=0.75, width=0.25, height=0.5,
 grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
 drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
 grid.text(clock_df$tz[4])
-
+upViewport()
+pushViewport(viewport(x=0.75, width=0.25, height=0.25,y=0.825,
+                      just="left", name="header4"))
+grid.text(clock_df$tzday[4])
+upViewport()
 #grid.rect(gp=gpar(col="green"))
 #world_clock() # gets current local time and adjusts for the others
 #world_clock(as.POSIXlt("2023-03-31 09:34:00")) # treats input as local time
