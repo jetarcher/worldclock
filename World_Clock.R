@@ -143,15 +143,19 @@ grid.newpage()
 vp <- viewport(width=1.0, height=0.5) # originally four times as high, now twice as high
 pushViewport(vp)
 grid.rect(gp=gpar(col="black")) #black around all 
-nrow(clock_df)  #number of recodrs, for if/we we want to automate number of clocks
+nrow(clock_df)  #number of records, for if/we we want to automate number of clocks
 # Square inside the main rectangled, 1/4 the width and 1/2 the height
 pushViewport(viewport(x=0.0, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
 grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
+#upViewport(2)
+#pushViewport(viewport(x=0.0, width=0.25, height=0.25,
+#                      just="left", name="header1"))
+#grid.rect(gp=gpar(col="purple",fill=fill_color(clock_df$tz_dn[1])))
 #grid.circle(x=0.125, y=0.5, default="native", 
 #            r=unit(0.5, "native"))
 drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
-#upViewport(2)
+upViewport(2)
 grid.text(clock_df$tz[1], just="top")
 # upViewport(3)
 # pushViewport(viewport(x=0.0, width=0.25, height=0.25,
@@ -161,7 +165,7 @@ grid.text(clock_df$tz[1], just="top")
 # #grid.text(clock_df$tzday)
 # grid.text('17') # so this isn't showing,  nor the border
 # It seems to still be part of the first clock viewport, not the one above it.
-upViewport(2)
+#upViewport(1)
 #
 # Second clock face starts here
 #
