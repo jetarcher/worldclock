@@ -62,11 +62,16 @@ fill_color <- function(fc_dn)
 #  Works by allowing anything that starts with something that's NOT an e and eventually has a slash
 #  OR by allowing anything that DOES start with an E but does NOT have a lower-case t after it, followed by anything and a slash
 # I think it's uglier than it should be, ut it works.
-main_tz <- OlsonNames()[grep('^[^E].+/|^[E][^t].+/',OlsonNames())]
-current_time <- Sys.time() # can adjust it by appending: -hours(3)+minutes(10)
+# Takes a time value as the starting point, uses system time if none given
+# It's the "current time" so everything gets adjusted as if it's starting from Los Angeles
+
+world_clock <- function(current_time = Sys.time())
+{
+main_tz <- OlsonNames()[grep('^[^E].+/|^[worlE][^t].+/',OlsonNames())]
+#current_time <- Sys.time() # can adjust it by appending: -hours(3)+minutes(10)
 current_hour <- hour(current_time) #format(current_time,'%H')
 current_minute <- minute(current_time) #format(current_time,'%M')
-
+la_time <- with_tz(current_time, tzone = "America/Los_Angeles")
 lon_time <-with_tz(current_time, tzone = "Europe/London")
 ny_time <-with_tz(current_time, tzone = "US/Eastern")
 jp_time <- with_tz(current_time,tzone='Asia/Tokyo')
@@ -87,10 +92,10 @@ all_tz <- c('Europe/London',"EST","Europe/Moscow","Asia/Tokyo")
 dc_time <- ny_time
 #clock[1]<- c(current_hour, current_minute)
 #clock[2] <-c(hour(dc_time),minute(dc_time))
-time_1 <- c(current_hour, current_minute)
-time_2 <- c(hour(dc_time),minute(dc_time))
-time_3 <-c(hour(lon_time),minute(lon_time))
-time_4 <- c(hour(jp_time), minute(jp_time))
+# time_1 <- c(current_hour, current_minute)
+# time_2 <- c(hour(dc_time),minute(dc_time))
+# time_3 <-c(hour(lon_time),minute(lon_time))
+# time_4 <- c(hour(jp_time), minute(jp_time))
 #
 # okay, we have it finding the time, and calculating for other time zones
 # It's in a data frame, which makes it easy to access them,albeit not quite intuitive
@@ -104,28 +109,41 @@ time_4 <- c(hour(jp_time), minute(jp_time))
 
 clock_df <- data.frame(
  tz =c("PST","EST","GMT","JST"),
- tz_time=c(current_time,dc_time, lon_time,jp_time),
-  tzhour=c(current_hour,hour(dc_time), hour(lon_time),hour(jp_time)),
-  tzmin=c(current_minute, minute(dc_time), minute(lon_time), minute(jp_time)),
-  tzday=c(day(current_time), day(dc_time), day(lon_time), day(jp_time)),
- tz_dn= c(day_night(current_time), day_night(dc_time), day_night(lon_time),day_night(jp_time))
+ tz_time=c(la_time,dc_time, lon_time,jp_time),
+  tzhour=c(hour(la_time),hour(dc_time), hour(lon_time),hour(jp_time)),
+  tzmin=c(minute(la_time), minute(dc_time), minute(lon_time), minute(jp_time)),
+  tzday=c(day(la_time), day(dc_time), day(lon_time), day(jp_time)),
+ tz_dn= c(day_night(la_time), day_night(dc_time), day_night(lon_time),day_night(jp_time))
 )
 clock_df
+
+# Need to clean some of these up, helpful though they are
 day(clock_df$tz_time[4])
-#clock_df <- tz_df
-#clock_df
+
 grid.newpage()
-vp <- viewport(width=1.0, height=0.5) # four times as long as high
+# Start with a rectangle that can be divided into four squares
+vp <- viewport(width=1.0, height=0.5) # originally four times as high, now twice as high
 pushViewport(vp)
 grid.rect(gp=gpar(col="black")) #black around all 
-
+nrow(clock_df)  #number of recodrs, for if/we we want to automate number of clocks
+#Square inside the main rectangled, 1/4 the qidth and 1/2 the height
 pushViewport(viewport(x=0.0, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
 grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
 #grid.circle(x=0.125, y=0.5, default="native", 
 #            r=unit(0.5, "native"))
 drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
-grid.text(clock_df$tz[1])
+
+#upViewport(2)
+grid.text(clock_df$tz[1], just="top")
+# upViewport(3)
+# pushViewport(viewport(x=0.0, width=0.25, height=0.25,
+#                       just="left", name="header1")
+#              )
+# grid.rect(gp=gpar(col="cyan"))
+# #grid.text(clock_df$tzday)
+# grid.text('17') # so this isn't showing,  nor the border
+# It seems to still be part of the first clock viewport, not the one above it.
 upViewport(2)
 pushViewport(viewport(x=0.25, width=0.25, height=0.5,
                       just="left", name=clock_df$tz[2]))
@@ -144,4 +162,10 @@ pushViewport(viewport(x=0.75, width=0.25, height=0.5,
 grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
 drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
 grid.text(clock_df$tz[4])
+
 #grid.rect(gp=gpar(col="green"))
+#world_clock() # gets current local time and adjusts for the others
+#world_clock(as.POSIXlt("2023-03-31 09:34:00")) # treats input as local time
+# world_clock(as.POSIXlt("2023-03-31 08:15:00", tz="Asia/Tokyo")) #puts input into that timezone
+# 
+}
