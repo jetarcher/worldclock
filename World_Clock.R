@@ -146,76 +146,99 @@ pushViewport(vp)
 grid.rect(gp=gpar(col="black")) #black around all 
 nrow(clock_df)  #number of records, for if/we we want to automate number of clocks
 # Square inside the main rectangled, 1/4 the width and 1/2 the height
-pushViewport(viewport(x=0.0, width=0.25, height=0.5,
-                      just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
-grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
-#upViewport(2)
-#pushViewport(viewport(x=0.0, width=0.25, height=0.25,
-#                      just="left", name="header1"))
-#grid.rect(gp=gpar(col="purple",fill=fill_color(clock_df$tz_dn[1])))
-#grid.circle(x=0.125, y=0.5, default="native", 
-#            r=unit(0.5, "native"))
-drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
-grid.text(clock_df$tz[1])
+# pushViewport(viewport(x=0.0, width=0.25, height=0.5,
+#                       just="left", name=clock_df$tz[1])) #this makes the name the timezone - previously A B C D, and maybe that was better.
+# grid.rect(gp=gpar(col="red",fill=fill_color(clock_df$tz_dn[1])))
+# #upViewport(2)
+# #pushViewport(viewport(x=0.0, width=0.25, height=0.25,
+# #                      just="left", name="header1"))
+# #grid.rect(gp=gpar(col="purple",fill=fill_color(clock_df$tz_dn[1])))
+# #grid.circle(x=0.125, y=0.5, default="native", 
+# #            r=unit(0.5, "native"))
+# drawClock(hour = clock_df$tzhour[1], minute = clock_df$tzmin[1])
+# grid.text(clock_df$tz[1])
+# 
+# upViewport()
+# #upViewport(2)
+# pushViewport(viewport(x=0.0, width=0.25, height=0.25,y=0.825,
+#                       just="left", name="header1"))
+# grid.text(clock_df$tzday[1])
+# upViewport()
+# # upViewport(3)
+# # pushViewport(viewport(x=0.0, width=0.25, height=0.25,
+# #                       just="left", name="header1")
+# #              )
+# # grid.rect(gp=gpar(col="cyan"))
+# # #grid.text(clock_df$tzday)
+# # grid.text('17') # so this isn't showing,  nor the border
+# # It seems to still be part of the first clock viewport, not the one above it.
+# #upViewport(1)
+# #
+# # Second clock face starts here
+# #
+# pushViewport(viewport(x=0.25, width=0.25, height=0.5,
+#                       just="left", name=clock_df$tz[2]))
+# grid.rect(gp=gpar(col="green",fill=fill_color(clock_df$tz_dn[2])))
+# drawClock(hour = clock_df$tzhour[2], minute = clock_df$tzmin[2])
+# grid.text(clock_df$tz[2])
+# upViewport()
+# pushViewport(viewport(x=0.25, width=0.25, height=0.25,y=0.825,
+#                       just="left", name="header2"))
+# grid.text(clock_df$tzday[2])
+# upViewport()
+# 
+# #
+# # Third clock face starts here
+# #
+# pushViewport(viewport(x=0.5, width=0.25, height=0.5,
+#                       just="left", name=clock_df$tz[3]))
+# grid.rect(gp=gpar(col="yellow",fill=fill_color(clock_df$tz_dn[3])))
+# drawClock(hour = clock_df$tzhour[3], minute = clock_df$tzmin[3])
+# grid.text(clock_df$tz[3])
+# upViewport()
+# pushViewport(viewport(x=0.5, width=0.25, height=0.25,y=0.825,
+#                       just="left", name="header3"))
+# grid.text(clock_df$tzday[3])
+# upViewport()
+# #
+# # Fourth clock face starts here
+# #
+# pushViewport(viewport(x=0.75, width=0.25, height=0.5,
+#                       just="left", name=clock_df$tz[4]))
+# grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
+# drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
+# grid.text(clock_df$tz[4])
+# upViewport()
+# pushViewport(viewport(x=0.75, width=0.25, height=0.25,y=0.825,
+#                       just="left", name="header4"))
+# grid.text(clock_df$tzday[4])
+# upViewport()
 
-upViewport()
-#upViewport(2)
-pushViewport(viewport(x=0.0, width=0.25, height=0.25,y=0.825,
-                      just="left", name="header1"))
-grid.text(clock_df$tzday[1])
-upViewport()
-# upViewport(3)
-# pushViewport(viewport(x=0.0, width=0.25, height=0.25,
-#                       just="left", name="header1")
-#              )
-# grid.rect(gp=gpar(col="cyan"))
-# #grid.text(clock_df$tzday)
-# grid.text('17') # so this isn't showing,  nor the border
-# It seems to still be part of the first clock viewport, not the one above it.
-#upViewport(1)
-#
-# Second clock face starts here
-#
-pushViewport(viewport(x=0.25, width=0.25, height=0.5,
-                      just="left", name=clock_df$tz[2]))
-grid.rect(gp=gpar(col="green",fill=fill_color(clock_df$tz_dn[2])))
-drawClock(hour = clock_df$tzhour[2], minute = clock_df$tzmin[2])
-grid.text(clock_df$tz[2])
-upViewport()
-pushViewport(viewport(x=0.25, width=0.25, height=0.25,y=0.825,
-                      just="left", name="header2"))
-grid.text(clock_df$tzday[2])
-upViewport()
+for (i in 1:4)
+{
+#print(i)
 
-#
-# Third clock face starts here
-#
-pushViewport(viewport(x=0.5, width=0.25, height=0.5,
-                      just="left", name=clock_df$tz[3]))
-grid.rect(gp=gpar(col="yellow",fill=fill_color(clock_df$tz_dn[3])))
-drawClock(hour = clock_df$tzhour[3], minute = clock_df$tzmin[3])
-grid.text(clock_df$tz[3])
-upViewport()
-pushViewport(viewport(x=0.5, width=0.25, height=0.25,y=0.825,
-                      just="left", name="header3"))
-grid.text(clock_df$tzday[3])
-upViewport()
-#
-# Fourth clock face starts here
-#
-pushViewport(viewport(x=0.75, width=0.25, height=0.5,
-                      just="left", name=clock_df$tz[4]))
-grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[4])))
-drawClock(hour = clock_df$tzhour[4], minute = clock_df$tzmin[4])
-grid.text(clock_df$tz[4])
-upViewport()
-pushViewport(viewport(x=0.75, width=0.25, height=0.25,y=0.825,
-                      just="left", name="header4"))
-grid.text(clock_df$tzday[4])
-upViewport()
+  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.5,
+                        just="left", name=clock_df$tz[i]))
+  grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[i])))
+  drawClock(hour = clock_df$tzhour[i], minute = clock_df$tzmin[i])
+  grid.text(clock_df$tz[i])
+  upViewport()
+  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.825,
+                        just="left", name=paste0("header",i)))
+  grid.text(clock_df$tzday[i])
+  upViewport()
+}
 #grid.rect(gp=gpar(col="green"))
 #world_clock() # gets current local time and adjusts for the others
 #world_clock(as.POSIXlt("2023-03-31 09:34:00")) # treats input as local time
 # world_clock(as.POSIXlt("2023-03-31 08:15:00", tz="Asia/Tokyo")) #puts input into that timezone
-# 
+# world_clock(as.POSIXlt("1945-09-02 08:15:00", tz="Asia/Tokyo")) # and this one works, well enough.
+# so next steps are
+# 1. Get the clock faces more automatic 
+# so we just iterate through the same code for 1, 2, 3, 4
+# 2. Show month along with date in the heeader
+# 3. Set up a footer and put the complete time zone in there
+# 4. Do a lookup for the three letter timezones so I can use them in the center consistently, still
+# 5. Add a parameter with a vector of timezones and show clocks for each one in there.
 }
