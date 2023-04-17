@@ -76,9 +76,9 @@ fill_color <- function(fc_dn)
 # Dials are shaded if the time there is between 6PM and 6AM.
 # Note that the times may be on a different day, and that is not currently shown (though can be inferred)
 #
-world_clock <- function(current_time = Sys.time())
+world_clock <- function(current_time = Sys.time(), show_tzones = c("America/Los_Angeles","US/Eastern","Europe/London",'Asia/Tokyo'))
 {
-  
+  # show_tzones isn't used for anything...yet. Just getting the parameter in there and working
   #get timezones that have a slash but don't start with Et (Etc, a bunch of GMT relative ones that I don't way)
   #  Works by allowing anything that starts with something that's NOT an e and eventually has a slash
   #  OR by allowing anything that DOES start with an E but does NOT have a lower-case t after it, followed by anything and a slash
@@ -99,6 +99,13 @@ lon_time <-with_tz(current_time, tzone = "Europe/London")
 ny_time <-with_tz(current_time, tzone = "US/Eastern")
 jp_time <- with_tz(current_time,tzone='Asia/Tokyo')
 mo_time <- with_tz(current_time,tzone='Europe/Moscow')
+show_times <- list(length(show_tzones))
+for (tzs in show_tzones )
+{
+  print(tzs)
+  #show_times[tzs]= c(show_times, with_tz(current_time, tzone = tzs))
+  #print (show_times[tzs])
+}
 
 all_tz <- c('Europe/London',"EST","Europe/Moscow","Asia/Tokyo")
 
@@ -126,7 +133,7 @@ dc_time <- ny_time
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 clock_df <- data.frame(
- tz =c("PST","EST","GMT","JST"),
+ tz =show_tzones,  #c("PST","EST","GMT","JST"),
  tz_time=c(la_time,dc_time, lon_time,jp_time),
   tzhour=c(hour(la_time),hour(dc_time), hour(lon_time),hour(jp_time)),
   tzmin=c(minute(la_time), minute(dc_time), minute(lon_time), minute(jp_time)),
@@ -222,11 +229,15 @@ for (i in 1:4)
                         just="left", name=clock_df$tz[i]))
   grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[i])))
   drawClock(hour = clock_df$tzhour[i], minute = clock_df$tzmin[i])
-  grid.text(clock_df$tz[i])
+  #grid.text(clock_df$tz[i])
   upViewport()
   pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.825,
                         just="left", name=paste0("header",i)))
   grid.text(clock_df$tzday[i])
+  upViewport()
+  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.125, #.825,
+                        just="left", name=paste0("footer",i)))
+  grid.text(clock_df$tz[i]) #, gp=gpar(font_size=20))
   upViewport()
 }
 #grid.rect(gp=gpar(col="green"))
@@ -235,7 +246,7 @@ for (i in 1:4)
 # world_clock(as.POSIXlt("2023-03-31 08:15:00", tz="Asia/Tokyo")) #puts input into that timezone
 # world_clock(as.POSIXlt("1945-09-02 08:15:00", tz="Asia/Tokyo")) # and this one works, well enough.
 # so next steps are
-# 1. Get the clock faces more automatic 
+# 1. Get the clock faces more automatic - done
 # so we just iterate through the same code for 1, 2, 3, 4
 # 2. Show month along with date in the heeader
 # 3. Set up a footer and put the complete time zone in there
