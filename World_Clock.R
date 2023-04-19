@@ -76,7 +76,7 @@ fill_color <- function(fc_dn)
 # Dials are shaded if the time there is between 6PM and 6AM.
 # Note that the times may be on a different day, and that is not currently shown (though can be inferred)
 #
-world_clock <- function(current_time = Sys.time(), show_tzones = c("America/Los_Angeles","US/Eastern","Europe/London",'Asia/Tokyo'))
+world_clock <- function(current_time = Sys.time(), show_tzones = c("US/Pacific","US/Eastern","Europe/Moscow",'Asia/Tokyo'))
 {
   # show_tzones isn't used for anything...yet. Just getting the parameter in there and working
   #get timezones that have a slash but don't start with Et (Etc, a bunch of GMT relative ones that I don't way)
@@ -100,12 +100,26 @@ ny_time <-with_tz(current_time, tzone = "US/Eastern")
 jp_time <- with_tz(current_time,tzone='Asia/Tokyo')
 mo_time <- with_tz(current_time,tzone='Europe/Moscow')
 show_times <- list(length(show_tzones))
+show_hours <- list(length(show_tzones))
 for (tzs in show_tzones )
 {
   print(tzs)
+  #show_times<- with_tz(current_time, tzone = tzs)
+  #show_hours<- hour(show_times) #hour(with_tz(current_time, tzone = tzs))
+  
+  show_times[[tzs]]$time <- with_tz(current_time, tzone = tzs)
+  show_times[[tzs]]$hour<- hour(show_times[[tzs]]$time) 
+  show_times[[tzs]]$minute= minute(show_times[[tzs]]$time)
+  show_times[[tzs]]$day= day(show_times[[tzs]]$time)
+  show_times[[tzs]]$dn= day_night(show_times[[tzs]]$time)
+  #show_hours[[tzs]]<- hour(show_times[[tzs]]) #hour(with_tz(current_time, tzone = tzs))
+  #show_minutes[tzs]= minute(show_times[tzs])
+  #show_days[tzs]= day(show_times[tzs])
   #show_times[tzs]= c(show_times, with_tz(current_time, tzone = tzs))
   #print (show_times[tzs])
 }
+print(show_times)
+#print(show_hours)
 
 all_tz <- c('Europe/London',"EST","Europe/Moscow","Asia/Tokyo")
 
@@ -134,12 +148,14 @@ dc_time <- ny_time
 
 clock_df <- data.frame(
  tz =show_tzones,  #c("PST","EST","GMT","JST"),
- tz_time=c(la_time,dc_time, lon_time,jp_time),
-  tzhour=c(hour(la_time),hour(dc_time), hour(lon_time),hour(jp_time)),
-  tzmin=c(minute(la_time), minute(dc_time), minute(lon_time), minute(jp_time)),
-  tzday=c(day(la_time), day(dc_time), day(lon_time), day(jp_time)),
+ tz_time= show_times, #c(la_time,dc_time, lon_time,jp_time),
+  tzhour=  c(hour(la_time),hour(dc_time), hour(lon_time),hour(jp_time)),#show_hours,  #
+  tzmin=c(minute(la_time), minute(dc_time), minute(lon_time), minute(jp_time)), #show_minutes, #
+  tzday=c(day(la_time), day(dc_time), day(lon_time), day(jp_time)),#show_days, #
  tz_dn= c(day_night(la_time), day_night(dc_time), day_night(lon_time),day_night(jp_time))
 )
+#print(show_hours)
+print
 #clock_df # use this to see what's in the data frame, where needed
 # Need to clean some of these up, helpful though they are
 #day(clock_df$tz_time[4])
@@ -221,23 +237,45 @@ nrow(clock_df)  #number of records, for if/we we want to automate number of cloc
 # grid.text(clock_df$tzday[4])
 # upViewport()
 
-for (i in 1:4)
-{
-#print(i)
+# for (i in 1:4)
+# {
+# #print(i)
+# 
+#   pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.5,
+#                         just="left", name=clock_df$tz[i]))
+#   grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[i])))
+#   drawClock(hour = clock_df$tzhour[i], minute = clock_df$tzmin[i])
+#   #grid.text(clock_df$tz[i])
+#   upViewport()
+#   pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.825,
+#                         just="left", name=paste0("header",i)))
+#   grid.text(clock_df$tzday[i])
+#   upViewport()
+#   pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.125, #.825,
+#                         just="left", name=paste0("footer",i)))
+#   grid.text(clock_df$tz[i]) #, gp=gpar(font_size=20))
+#   upViewport()
+# }
 
-  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.5,
-                        just="left", name=clock_df$tz[i]))
-  grid.rect(gp=gpar(col="blue",fill=fill_color(clock_df$tz_dn[i])))
-  drawClock(hour = clock_df$tzhour[i], minute = clock_df$tzmin[i])
+n<-0
+for (tz in show_tzones)
+{
+  n<-n+1
+  print(tz)
+#print(show_times[[i]]$hour) show_times[[tzs]]$dn
+  pushViewport(viewport(x=0.25*(n-1), width=0.25, height=0.5,
+                        just="left", name=clock_df$tz[tz]))
+  grid.rect(gp=gpar(col="blue",fill=fill_color(show_times[[tz]]$dn)))
+  drawClock(hour = show_times[[tz]]$hour, minute = show_times[[tz]]$minute)
   #grid.text(clock_df$tz[i])
   upViewport()
-  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.825,
-                        just="left", name=paste0("header",i)))
-  grid.text(clock_df$tzday[i])
+  pushViewport(viewport(x=0.25*(n-1), width=0.25, height=0.25,y=0.825,
+                        just="left", name=paste0("header",n)))
+  grid.text(show_times[[tz]]$day)
   upViewport()
-  pushViewport(viewport(x=0.25*(i-1), width=0.25, height=0.25,y=0.125, #.825,
-                        just="left", name=paste0("footer",i)))
-  grid.text(clock_df$tz[i]) #, gp=gpar(font_size=20))
+  pushViewport(viewport(x=0.25*(n-1), width=0.25, height=0.25,y=0.125, #.825,
+                        just="left", name=paste0("footer",n)))
+  grid.text(tz) #, gp=gpar(font_size=20))
   upViewport()
 }
 #grid.rect(gp=gpar(col="green"))
