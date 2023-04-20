@@ -89,17 +89,7 @@ world_clock <- function(current_time = Sys.time(), show_tzones = c("US/Pacific",
  # but so far not using this for anything....  
 main_tz <- OlsonNames()[grep('^[^E].+/|^[worlE][^t].+/',OlsonNames())]
 
-# The initial time, whether input or Sys.time, will be converted to local
-# Which was fine at first, but also need to show it specifically as LA time
-# So these current_* variables can probably go at some point
-# current_hour <- hour(current_time) #format(current_time,'%H')
-# current_minute <- minute(current_time) #format(current_time,'%M')
-# 
-# la_time <- with_tz(current_time, tzone = "America/Los_Angeles")
-# lon_time <-with_tz(current_time, tzone = "Europe/London")
-# ny_time <-with_tz(current_time, tzone = "US/Eastern")
-# jp_time <- with_tz(current_time,tzone='Asia/Tokyo')
-# mo_time <- with_tz(current_time,tzone='Europe/Moscow')
+
 show_times <- list(length(show_tzones))
 show_hours <- list(length(show_tzones))
 for (tzs in show_tzones )
@@ -113,10 +103,6 @@ for (tzs in show_tzones )
   show_times[[tzs]]$minute= minute(show_times[[tzs]]$time)
   show_times[[tzs]]$day= day(show_times[[tzs]]$time)
   show_times[[tzs]]$dn= day_night(show_times[[tzs]]$time)
-  #show_hours[[tzs]]<- hour(show_times[[tzs]]) #hour(with_tz(current_time, tzone = tzs))
-  #show_minutes[tzs]= minute(show_times[tzs])
-  #show_days[tzs]= day(show_times[tzs])
-  #show_times[tzs]= c(show_times, with_tz(current_time, tzone = tzs))
   #print (show_times[tzs])
 }
 #print(show_times)
