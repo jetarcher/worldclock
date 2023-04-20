@@ -102,6 +102,7 @@ for (tzs in show_tzones )
   show_times[[tzs]]$hour<- hour(show_times[[tzs]]$time) 
   show_times[[tzs]]$minute= minute(show_times[[tzs]]$time)
   show_times[[tzs]]$day= day(show_times[[tzs]]$time)
+  show_times[[tzs]]$month= month(show_times[[tzs]]$time)
   show_times[[tzs]]$dn= day_night(show_times[[tzs]]$time)
   #print (show_times[tzs])
 }
@@ -168,7 +169,7 @@ for (tz in show_tzones)
   upViewport()
   pushViewport(viewport(x=0.25*(n-1), width=0.25, height=0.25,y=0.825,
                         just="left", name=paste0("header",n)))
-  grid.text(show_times[[tz]]$day)
+  grid.text(paste(show_times[[tz]]$month,"/",show_times[[tz]]$day))
   upViewport()
   pushViewport(viewport(x=0.25*(n-1), width=0.25, height=0.25,y=0.125, #.825,
                         just="left", name=paste0("footer",n)))
